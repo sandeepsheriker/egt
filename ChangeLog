@@ -4,6 +4,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
+### Added
+- Application: allow non-zero exit values.
+- Charts: xlabel, ylabel, and title setters added.
+- Check/RadioBox: add check/radiobox_align and show_label getters and setters.
+- ComboBox/ListBox: introduce the add_item method
+- ComposerScreen: introduce a new backend for the Microchip Graphics Composer.
+- Global Palette/Font:  setters and getters added, reset function added as well.
+- ImageHolder: setters and getters for uri and scales.
+- Palette: empty getter added.
+- ProgressBar: show_percentage method added to display a percentage of the
+  progression instead of the basic value.
+- ScrolledView: horizontal and vertical offset/policy getters added.
+- SliderType: live_update getter added. Introduce the inverted flag to change
+  slider direction of progression
+- StaticGrid: grid_size setter and getter added.
+- TextBox: text_flags setter added.
+- Theme: introduce name property.
+- Widget: has_palette palette getter added.
+
+### Changed
+- Gstcameraimpl: default device node is /dev/video0.
+- ImageButton/Label: show_label is automatically set to false if text string is
+empty, otherwise it is set to true.
+- Serialization/de-serialization: improvements for the composer
+- Widget: removal or local theme support. There is only a glabal theme, remove
+  default_palette as well.
+
+### Fixed
+- CircleWidget: radius now updated on resize.
+- Git commit id with newer version of git was set to n/a.
+- TextBox: text display issue when moved/resized non left aligned texts rendering,
+  fix clear()
+- Sound: same file can be played several times when using ifstream instead of
+  libsndfile.
 
 ## [1.3] - 2021-12-10
 ### Added
