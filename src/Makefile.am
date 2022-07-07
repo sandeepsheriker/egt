@@ -425,17 +425,27 @@ checkheaders:
 		$(AM_CPPFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(libegt_la_CXXFLAGS)
 
 $(top_builddir)/include/egt/git.version: .FORCE
-	@switch_user="eval"; \
-	if test -d "$(top_srcdir)/.git"; then \
-		if test $$(id -u) -eq 0; then \
-			if test $$(id -u) -ne $$(stat -c %u $(top_srcdir)/.git); then \
-				git_tree_user=$$(stat -c %U $(top_srcdir)/.git); \
-				switch_user="su $$git_tree_user -c"; \
-			fi \
+	@if test -f "$(top_srcdir)/.git/index"; then \
+		timestamp_index=$$(stat -c %Y $(top_srcdir)/.git/index); \
+		timestamp_version=$$(stat -c %Y $(top_builddir)/include/egt/git.version); \
+		if test $$? -ne 0; then \
+			timestamp_version=0; \
+		fi; \
+		if test $$timestamp_version -lt $$timestamp_index; then \
+			switch_user="eval"; \
+			if test $$(id -u) -eq 0; then \
+				if test $$(id -u) -ne $$(stat -c %u $(top_srcdir)/.git); then \
+					git_tree_user=$$(stat -c %U $(top_srcdir)/.git); \
+					switch_user="su $$git_tree_user -c"; \
+				fi \
+			fi; \
+			$$switch_user '$(top_srcdir)/scripts/git_version.sh $(top_srcdir) > $(top_builddir)/include/egt/git.version'; \
+			$$switch_user 'touch $(top_srcdir)/src/utils.cpp'; \
 		fi \
-	fi; \
-	$$switch_user '$(top_srcdir)/scripts/git_version.sh $(top_srcdir) > $(top_builddir)/include/egt/git.version'; \
-	$$switch_user 'touch $(top_srcdir)/src/utils.cpp';
+	elif ! test -f $(top_builddir)/include/egt/git.version; then \
+		echo "n/a" > $(top_builddir)/include/egt/git.version; \
+		touch $(top_srcdir)/src/utils.cpp; \
+	fi
 
 .PHONY: .FORCE
 .FORCE:
